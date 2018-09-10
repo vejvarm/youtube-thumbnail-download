@@ -7,14 +7,21 @@ from bs4 import BeautifulSoup
 
 
 def check_url(url):
-    # check if it is actually a valid YouTube link using regexp
+    """ Check if url is actually a valid YouTube link using regexp.
+
+    :param url: string url that is to be checked by regexp
+    :return: boolean True if the url matches the regexp (it is a valid YouTube page), otherwise False
+    """
     youtube = re.compile(r'(https?://)?(w{3}\.)?(youtube.com/watch\?v=|youtu.be/).{11}')
 
     return True if youtube.match(url) else False
 
 
 def get_page():
-    """ read url input by the user and return the source code of the requested page"""
+    """ Read url input by the user and return the source code of the requested page.
+
+    :return: string source code of the YouTube page specified by url
+    """
 
     try:
         url = sys.argv[1]
@@ -34,7 +41,10 @@ def get_page():
 
 
 def get_thumbnail_url():
-    """ get the url of the thumbnail image in max resolution"""
+    """ Get the url of the thumbnail image in max resolution.
+
+    :return: string url to the thumbnail image
+    """
 
     try:
         html = get_page()
@@ -48,10 +58,14 @@ def get_thumbnail_url():
     if thumbnail:
         return thumbnail["content"]
     else:
-        raise ValueError("Property og:image not found.")
+        raise FileNotFoundError("Property og:image not found.")
 
 
 def save_thumbnail():
+    """ Print the thumbnail url and save the image from thumbnail url to a local file.
+
+    :return: None
+    """
     thumb_url = get_thumbnail_url()
     thumb_data = requests.get(thumb_url).content
 
